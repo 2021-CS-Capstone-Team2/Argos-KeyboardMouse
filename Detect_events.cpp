@@ -509,7 +509,7 @@ int Detect_Hotkey(char input)
                 return 999;
             }
             else if (input == 'I') { // ctrl + shift 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('I');
                 return 999;
             }
@@ -527,7 +527,7 @@ int Detect_Hotkey(char input)
             }
 
             else if (input == 'O') { // alt + ctrl 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('O');
                 return 999;
             }
@@ -557,12 +557,12 @@ int Detect_Hotkey(char input)
             }
 
             else if (input == 'O') { // window + ctrl 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('O');
                 return 999;
             }
             else if (input == 'I') { // window + shift 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('I');
                 return 999;
             }
@@ -570,18 +570,18 @@ int Detect_Hotkey(char input)
 
         if (v[0] == 'I') { // 버퍼에 있는게 shift 일 경우
             if (input == 'O') { // shift + ctrl 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('O');
                 return 999;
             }
             else if (input == '>') { // shift + window 일 경우 버퍼에 쌓음
-                cout << "stack!" << endl;
+                //cout << "stack!" << endl;
                 v.push_back('>');
                 return 999;
         }
         }
 
-        cout << "clear" << endl;
+        //cout << "clear" << endl;
         v.clear(); //그냥 단일키로 눌렸을 경우 버퍼 초기화
     }
 
@@ -683,10 +683,12 @@ int Detect_Hotkey(char input)
                 return 35;
             }
         }
+        //cout << "clear" << endl;
+        v.clear(); //그냥 hotkey 조합이 아닐 경우 버퍼 초기화
 
     }
-    cout << "size : ";
-    cout << v.size() << endl << endl;
+    //cout << "size : ";
+    //cout << v.size() << endl << endl;
     return 999;
 }
 
@@ -708,11 +710,16 @@ string real_ip()
 
 int main()
 {
+    int event_result, hotkey_result;
+
     cout << real_ip();
 
     while (1) {
-        int temp = Detect_Hotkey(Detect_events());
-        if (temp != 999)
-            cout << "result : " << temp << endl;
+        
+        event_result = Detect_events();
+        cout << "key : " << char(event_result) << endl;
+        hotkey_result = Detect_Hotkey(event_result);
+        if (hotkey_result != 999)
+            cout << "hotkey : " << hotkey_result << endl;
     }
 }
