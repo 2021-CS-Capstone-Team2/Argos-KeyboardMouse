@@ -2,16 +2,17 @@
 #include <windows.h>
 #include <wininet.h>
 #include <string>
-#include <thread>
-#include <vector>
 
 #pragma comment(lib, "wininet.lib") 
 
+int size(int arr[], int count);
 
 using namespace std;
 
 
 static bool isRunning = true;
+static char v[3];
+static int index = 0;
 
 
 char Detect_events()
@@ -438,79 +439,111 @@ char Detect_events()
     }
 }
 
-vector<char> v;
-vector<char> ::iterator it;
+
+
+int size(char arr[], int count)
+{
+    int num = 0;
+
+    for (int i = 0; i < count; i++) {
+        if (arr[i] != 0)
+            num++;
+    }
+
+    return num;
+}
+
+void clear(char arr[], int count)
+{
+    for (int i = 0; i < count; i++) {
+        *(arr + i) = 0;
+    }
+}
 
 
 int Detect_Hotkey(char input)
-{
-
+{   
+    printf("-->%c %c %c\n", v[0], v[1], v[2]);
 
     // 버퍼가 비었을 경우
-    if (v.size() == 0) {
+    if (size(v, sizeof(v)) == 0) {
         if (input == 'O' || input == 'I' || input == '>' || input == 'P') {
 
-            v.push_back(input); // 특수키가 눌리면 버퍼에 push
+            v[index] = input; // 특수키가 눌리면 버퍼에 push
+            index++;
         }
     }
-
+    
     //버퍼가 1개 차있을 경우
-    else if (v.size() == 1) {
+    else if (size(v, sizeof(v)) == 1) {
 
         if (v[0] == 'O') { // 버퍼에 있는게 ctrl일 경우
             if (input == '{') { // ctrl + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 4;
             }
             else if (input == 'H') { // ctrl + page down
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 5;
             }
             else if (input == 'G') { // ctrl + page up
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 6;
             }
             else if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' ||
                 input == '6' || input == '7' || input == '8' || input == '9') { // ctrl + number
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 17;
             }
             else if (input == 'x') { // ctrl + x
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 18;
             }
             else if (input == 'c') { // ctrl + c
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 19;
             }
             else if (input == 'v') { // ctrl + v
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 20;
             }
             else if (input == 'a') { // ctrl + a
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 21;
             }
             else if (input == 'z') { // ctrl + z
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 22;
             }
             else if (input == 'D') { // ctrl + ESC
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 23;
             }
 
             else if (input == 'P') { // ctrl + alt 일 경우 버퍼에 쌓음
-                v.push_back('P');
+                v[index] = 'P';
+                index++;
                 return 999;
             }
             else if (input == '>') { // ctrl + window 일 경우 버퍼에 쌓음
-                v.push_back('>');
+                v[index] = '>';
+                index++;
                 return 999;
             }
             else if (input == 'I') { // ctrl + shift 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('I');
+                v[index] = 'I';
+                index++;
                 return 999;
             }
 
@@ -518,52 +551,62 @@ int Detect_Hotkey(char input)
 
         if (v[0] == 'P') { // 버퍼에 있는게 alt일 경우
             if (input == '{') { // alt + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 7;
             }
             else if (input == 'D') { // alt + ESC
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 9;
             }
 
             else if (input == 'O') { // alt + ctrl 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('O');
+                v[index] = 'O';
+                index++;
                 return 999;
             }
         }
 
         if (v[0] == '>') { // 버퍼에 있는게 window일 경우
             if (input == '{') { // window + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 10;
             }
             else if (input == 'L' || input == ':' || input == 'Z' || input == 'X') { // window + arrow
 
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 14;
             }
             else if (input == 'g') { // window + g
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 28;
             }
             else if (input == 'e') { // window + e
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 29;
             }
             else if (input == 'v') { // window + v
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 30;
             }
 
             else if (input == 'O') { // window + ctrl 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('O');
+                v[index] = 'O';
+                index++;
                 return 999;
             }
             else if (input == 'I') { // window + shift 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('I');
+                v[index] = 'I';
+                index++;
                 return 999;
             }
         }
@@ -571,120 +614,142 @@ int Detect_Hotkey(char input)
         if (v[0] == 'I') { // 버퍼에 있는게 shift 일 경우
             if (input == 'O') { // shift + ctrl 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('O');
+                v[index] = 'O';
+                index++;
                 return 999;
             }
             else if (input == '>') { // shift + window 일 경우 버퍼에 쌓음
                 //cout << "stack!" << endl;
-                v.push_back('>');
+                v[index] = '>';
+                index++;
                 return 999;
         }
         }
 
         //cout << "clear" << endl;
-        v.clear(); //그냥 단일키로 눌렸을 경우 버퍼 초기화
+        clear(v, sizeof(v));
+        index = 0; //그냥 단일키로 눌렸을 경우 버퍼 초기화
     }
 
     //버퍼가 2개 차있을 경우
-    else if (v.size() == 2) {
+    else if (size(v, sizeof(v)) == 2) {
 
         if (v[0] == 'O' && v[1] == 'P') { // 버퍼에 있는게 ctrl + alt 일 경우
             if (input == '{') { // ctrl + alt + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 0;
             }
         }
 
         else if (v[0] == 'O' && v[1] == '>') { // 버퍼에 있는게 ctrl + window 일 경우
             if (input == 'd') { // ctrl + window + d
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 1;
             }
             else if (input == 'L') { // ctrl + window + left
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 2;
             }
             else if (input == 'Z') { // ctrl + window + right
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 3;
             }
         }
 
         else if (v[0] == 'O' && v[1] == 'I') { // 버퍼에 있는게 ctrl + shift 일 경우
             if (input == '{') { // ctrl + shift + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 16;
             }
             else if (input == 'D') { // ctrl + shift + ESC
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 24;
             }
         }
 
         if (v[0] == 'P' && v[1] == 'O') { // 버퍼에 있는게 alt + ctrl 일 경우
             if (input == '{') { // alt + ctrl + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 8;
             }
         }
 
         if (v[0] == '>' && v[1] == 'O') { // 버퍼에 있는게 window + ctrl 일 경우
             if (input == 'd') { // window + ctrl + d
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 11;
             }
             else if (input == 'L') { // window + ctrl + right
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 13;
             }
             else if (input == 'Z') { // window + ctrl + left
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 12;
             }
         }
 
         if (v[0] == '>' && v[1] == 'I') { // 버퍼에 있는게 window + shift 일 경우
             if (input == 's') { // window + shift + s
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 27;
             }
             else if (input == 'L') { // window + shift + right
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 25;
             }
             else if (input == 'Z') { // window + shift + left
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 26;
             }
         }
 
         if (v[0] == 'I' && v[1] == 'O') { // 버퍼에 있는게 shift + ctrl 일 경우
             if (input == 'D') { // shift + ctrl + ESC
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 31;
             }
             else if (input == '{') { // shift + ctrl + tab
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 32;
             }
         }
 
         if (v[0] == 'I' && v[1] == '>') { // 버퍼에 있는게 shift + window 일 경우
             if (input == 'Z') { // shift + window + right
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 33;
             }
             else if (input == 'L') { // shift + window + left
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 34;
             }
             else if (input == 's') { // shift + window + s
-                v.clear();
+                clear(v, sizeof(v));
+                index = 0;
                 return 35;
             }
         }
         //cout << "clear" << endl;
-        v.clear(); //그냥 hotkey 조합이 아닐 경우 버퍼 초기화
+        clear(v, sizeof(v));
+        index = 0; //그냥 hotkey 조합이 아닐 경우 버퍼 초기화
 
     }
     //cout << "size : ";
@@ -718,6 +783,7 @@ int main()
         
         event_result = Detect_events();
         cout << "key : " << char(event_result) << endl;
+
         hotkey_result = Detect_Hotkey(event_result);
         if (hotkey_result != 999)
             cout << "hotkey : " << hotkey_result << endl;
